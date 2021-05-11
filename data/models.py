@@ -7,17 +7,11 @@ from multiselectfield import MultiSelectField
 
 User = get_user_model()
 
-CHOICES = (
+TAGS = (
     ('завтрак', 'завтрак'),
     ('обед', 'обед'),
     ('ужин', 'ужин'),
 )
-
-
-# class Tags(models.TextChoices):
-#     BREAKFAST = 'завтрак', 'завтрак'
-#     LUNCH = 'обед', 'обед'
-#     DINNER = 'ужин', 'ужин'
 
 
 class Ingredient(models.Model):
@@ -59,7 +53,7 @@ class Recipe(models.Model):
         through='RecipeIngredient',
         verbose_name='Ингредиенты'
     )
-    tag = MultiSelectField(choices=CHOICES, verbose_name='Тег')
+    tag = MultiSelectField(choices=TAGS, verbose_name='Тег')
     time = models.PositiveIntegerField(verbose_name='Время приготовления')
     slug = models.SlugField(
         max_length=50,
