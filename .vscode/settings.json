@@ -1,0 +1,7 @@
+{
+    "editor.rulers": [
+        80
+    ],
+    "python.pythonPath": "venv\\Scripts\\python.exe",
+    "json.maxItemsComputed": 10000
+}
