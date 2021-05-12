@@ -118,8 +118,14 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.0/howto/static-files/
+# Login settings
+
+LOGIN_URL = "/auth/login/"
+LOGIN_REDIRECT_URL = "index" 
+LOGOUT_REDIRECT_URL = "index" 
+
+
+# Static files 
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = ['staticfiles']
