@@ -2,7 +2,70 @@
 {% block title %}Рецепты{% endblock %}
 {% block content %}
 
-    <h1>Рецепты</h1>
-    111
+<div class="main__header">
+    <h1 class="main__title">Рецепты</h1>
+
+    {% if tags %}
+
+        <ul class="tags">
+
+            {% for tag in tags %}
+
+                <li class="tags__item">
+                    <a id="breakfast" class="tags__checkbox tags__checkbox_style_orange tags__checkbox_active" href="#"></a>
+                    <span class="tags__label">Завтрак</span>
+                </li>
+                <li class="tags__item">
+                    <a id="lunch" class="tags__checkbox tags__checkbox_style_green tags__checkbox_active" href="#"></a>
+                    <span for="lunch" class="tags__label">Обед</span>
+                </li>
+                <li class="tags__item">
+                    <a id="dinner" class="tags__checkbox tags__checkbox_style_purple tags__checkbox_active" href="#"></a>
+                    <label for="dinner" class="tags__label">Ужин</label>
+                </li>
+
+            {% endfor %}    
+
+        </ul>
+
+    {% endif %}    
+
+</div>
+<div class="card-list">
+
+    {% for recipe in recipes %}
+
+        <div class="card" data-id="120">
+            <a href="#" class="link" target="_blank"><img src="./images/testCardImg.png" alt="Какой-то текст" class="card__image"></a>
+            <div class="card__body">
+                <a class="card__title link" href="#" target="_blank">{{ recipe.name }}</a>
+
+                {% if recipe.tags %}
+
+                    <ul class="card__items">
+                    
+                        {% for tag in recipe.tags.all %}
+
+                            <li class="card__item"><span class="badge {{ tag.classname }}">{{ tag.name }}</span></li>
+
+                        {% endfor %}
+                    
+                    </ul>    
+                    
+                {% endif %}    
+
+                <div class="card__items card__items_column">
+                    <p class="card__text"><span class="icon-time"></span>{{ recipe.time }}</p>
+                    <p class="card__text"><span class="icon-user"></span> <a href="#" style="color: black">{{ recipe.author }}</a></p>
+                </div>
+            </div>
+            <div class="card__footer">
+                <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
+                <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
+            </div>
+        </div>
+    
+    {% endfor %}    
+</div>    
 
 {% endblock %}

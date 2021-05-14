@@ -2,15 +2,25 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models.constraints import UniqueConstraint
 
-from multiselectfield import MultiSelectField
-
 User = get_user_model()
 
-TAGS = (
-    ('завтрак', 'завтрак'),
-    ('обед', 'обед'),
-    ('ужин', 'ужин'),
-)
+
+class Tag(models.Model):
+    name = models.CharField(
+        max_length=50,
+        verbose_name='Название тега',
+    )
+    classname = models.CharField(
+        max_length=50,
+        verbose_name='Класс, задающий цвет',
+    )
+
+    class Meta:
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
+
+    def __str__(self):
+        return self.name    
 
 
 class Ingredient(models.Model):
@@ -50,9 +60,13 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField(
         Ingredient,
         through='RecipeIngredient',
-        verbose_name='Ингредиенты'
+        verbose_name='Ингредиенты',
     )
-    tag = MultiSelectField(choices=TAGS, verbose_name='Тег')
+    tags = models.ManyToManyField(
+        Tag,
+        related_name='tags',
+        verbose_name='Теги',
+    )
     time = models.PositiveIntegerField(verbose_name='Время приготовления')
     slug = models.SlugField(
         max_length=50,
