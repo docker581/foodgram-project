@@ -22,7 +22,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'data',
-    'multiselectfield',
+    'sorl.thumbnail',
 ]
 
 MIDDLEWARE = [
@@ -105,11 +105,14 @@ LOGIN_REDIRECT_URL = "index"
 LOGOUT_REDIRECT_URL = "index" 
 
 
-# Static files 
+# Static and media
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = ['staticfiles']
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_URL = '/mediafiles/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 
 
 # Email 

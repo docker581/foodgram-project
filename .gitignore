@@ -109,7 +109,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-.vscode
+.vscode/
 
 # Spyder project settings
 .spyderproject
@@ -129,5 +129,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Static
-static
+# Static and media
+static/
+media/
