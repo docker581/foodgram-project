@@ -1,4 +1,4 @@
 .badge_style_purple {
-    background: rgba(135, 117, 210, 0.1);
-    color: #8775D2;
+    background: rgba(135, 117, 210, 0.1) !important;
+    color: #8775D2 !important;
 }

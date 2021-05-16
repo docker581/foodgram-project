@@ -2,7 +2,7 @@
     display: inline-block;
     vertical-align: middle;
     position: relative;
-    background-image: url("/mediafiles/userIcon.svg");
+    background-image: url("/media/userIcon.svg");
     width: 20px;
     height: 20px;
 }
