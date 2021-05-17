@@ -31,7 +31,7 @@
             <a href="#" class="link" target="_blank">
 
                 {% load thumbnail %}
-                {% thumbnail recipe.image "480x480" crop="center" upscale=True as im %}
+                {% thumbnail recipe.image "361x240" crop="center" upscale=True as im %}
                     <img class="card-img" src="{{ im.url }}" class="card__image" alt="">
                 {% endthumbnail %}
                 
@@ -54,7 +54,7 @@
                 {% endif %}    
 
                 <div class="card__items card__items_column">
-                    <p class="card__text"><span class="icon-time"></span>{{ recipe.time }}</p>
+                    <p class="card__text"><span class="icon-time"></span> {{ recipe.time }}</p>
                     <p class="card__text"><span class="icon-user"></span> <a href="#" style="color: black">{{ recipe.author }}</a></p>
                 </div>
             </div>
