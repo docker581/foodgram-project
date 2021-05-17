@@ -30,10 +30,20 @@
         <div class="card" data-id="120">
             <a href="#" class="link" target="_blank">
 
-                {% load thumbnail %}
-                {% thumbnail recipe.image "361x240" crop="center" upscale=True as im %}
-                    <img class="card-img" src="{{ im.url }}" class="card__image" alt="">
-                {% endthumbnail %}
+                {% if recipe.image %}
+
+                    {% load thumbnail %}
+                    {% thumbnail recipe.image "361x240" crop="center" upscale=True as im %}
+                        <img src="{{ im.url }}" class="card__image" alt="">
+                    {% endthumbnail %}
+
+                {% else %}  
+
+                    <!-- default image -->
+                    {% load static %}
+                    <img src="{%static 'img/testCardImg.png' %}" class="card__image" alt="">
+
+                {% endif %}
                 
             </a>
             <div class="card__body">
