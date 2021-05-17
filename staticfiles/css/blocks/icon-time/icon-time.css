@@ -4,5 +4,5 @@
     position: relative;
     width: 20px;
     height: 20px;
-    background-image: url("/media/timeIcon.svg");
+    background-image: url("../../../img/timeIcon.svg");
 }

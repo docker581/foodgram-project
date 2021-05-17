@@ -10,13 +10,9 @@ class Tag(models.Model):
         max_length=50,
         verbose_name='Название тега',
     )
-    checkbox_class = models.CharField(
+    color = models.CharField(
         max_length=50,
-        verbose_name='Класс для чекбокса',
-    )
-    badge_class = models.CharField(
-        max_length=50,
-        verbose_name='Класс для значка',
+        verbose_name='Цвет тега',
     )
 
     class Meta:

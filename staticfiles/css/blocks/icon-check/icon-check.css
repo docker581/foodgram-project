@@ -5,5 +5,6 @@
     width: 24px;
     height: 24px;
     background-color: currentColor;
-    -webkit-mask-image: url(/media/user-check.svg);
+    -webkit-mask-image: url("../../../img/user-check.svg");
+    mask-image: url("../../../img/user-check.svg");
 }

@@ -12,7 +12,7 @@
             {% for tag in tags %}
 
                 <li class="tags__item">
-                    <a id="breakfast" class="tags__checkbox {{ tag.checkbox_class }} tags__checkbox_active" href="#"></a>
+                    <a id="breakfast" class="tags__checkbox tags__checkbox_style_{{ tag.color }} tags__checkbox_active" href="#"></a>
                     <span class="tags__label">{{ tag.name }}</span>
                 </li>
 
@@ -45,7 +45,7 @@
                     
                         {% for tag in recipe.tags.all %}
 
-                            <li class="card__item"><span class="badge {{ tag.badge_class }}">{{ tag.name }}</span></li>
+                            <li class="card__item"><span class="badge badge_style_{{ tag.color }}">{{ tag.name }}</span></li>
 
                         {% endfor %}
                     

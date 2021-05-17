@@ -10,7 +10,7 @@ class RecipeIngredientInline(admin.TabularInline):
 
 
 class TagAdmin(admin.ModelAdmin):
-    list_display = ['name', 'checkbox_class', 'badge_class']  
+    list_display = ['name', 'color']  
 
 
 class IngredientAdmin(admin.ModelAdmin):

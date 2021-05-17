@@ -4,5 +4,5 @@
     position: relative;
     width: 20px;
     height: 20px;
-    background-image: url("/media/left.svg");
+    background-image: url("../../../img/left.svg");
 }

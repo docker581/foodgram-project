@@ -4,7 +4,7 @@
 .tags__checkbox_active:before {
     content: '';
     position: absolute;
-    background: url("/media/yes.svg");
+    background: url("../../../../../img/yes.svg");
     width: 12px;
     height: 9px;
     top: 7px;
