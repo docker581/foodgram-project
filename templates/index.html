@@ -28,7 +28,7 @@
     {% for recipe in recipes %}
 
         <div class="card" data-id="120">
-            <a href="#" class="link" target="_blank">
+            <a href="{% url 'recipe_detail' recipe.slug %}" class="link" target="_blank">
 
                 {% if recipe.image %}
 
@@ -47,7 +47,7 @@
                 
             </a>
             <div class="card__body">
-                <a class="card__title link" href="#" target="_blank">{{ recipe.name }}</a>
+                <a class="card__title link" href="{% url 'recipe_detail' recipe.slug %}" target="_blank">{{ recipe.name }}</a>
 
                 {% if recipe.tags %}
 

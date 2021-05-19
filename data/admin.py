@@ -7,6 +7,7 @@ class RecipeIngredientInline(admin.TabularInline):
     model = RecipeIngredient
     extra = 1
     raw_id_fields = ['ingredient']
+    list_display = ['recipe', 'ingredient', 'id']
 
 
 class TagAdmin(admin.ModelAdmin):
@@ -20,9 +21,9 @@ class IngredientAdmin(admin.ModelAdmin):
 
 
 class RecipeAdmin(admin.ModelAdmin):
+    inlines = [RecipeIngredientInline]
     list_display = ['name', 'author', 'pub_date']
-    list_filter = ['author', 'name']
-    inlines = [RecipeIngredientInline]       
+    list_filter = ['author', 'name']       
 
 
 admin.site.register(Tag, TagAdmin)
