@@ -58,8 +58,14 @@
             <div class="single-card__items single-card__items_column">
                 
                 {% for ingredient in recipe.ingredients.all %}
-                
-                    <p class=" single-card__section-item">{{ ingredient.name }} - {{ ingredient.dimension }}.</p>
+
+                    <!-- retrieve ingredient quantity -->
+                    {% load user_filters %}
+                    {% for recipe_ingredient in recipe_ingredients|findIngredient:ingredient %}
+
+                        <p class=" single-card__section-item">{{ ingredient.name }} - {{ recipe_ingredient.quantity }} {{ ingredient.dimension }}</p>
+                        
+                    {% endfor %}
 
                 {% endfor %}
                 
