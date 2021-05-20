@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Рецепты{% endblock %}
+{% block title %}{{ author }}{% endblock %}
 {% load static %}
 {% block styles %}
     <link rel="stylesheet" href="{% static 'css/pages/index.css' %}">
@@ -7,7 +7,7 @@
 {% block content %}
 
 <div class="main__header">
-    <h1 class="main__title">Рецепты</h1>
+    <h1 class="main__title">{{ author }}</h1>
 
     {% if tags %}
 
@@ -24,16 +24,23 @@
 
         </ul>
 
-    {% endif %}    
+    {% endif %}
 
 </div>
+
+{% if author != request.user %}
+    <div class="author-subscribe" data-author="323">
+        <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></p>
+    </div>
+{% endif %}    
+
 <div class="card-list">
 
     {% for recipe in page %}
 
         <div class="card" data-id="120">
             <a href="{% url 'recipe_detail' recipe.slug %}" class="link" target="_blank">
-
+                
                 {% if recipe.image %}
 
                     {% load thumbnail %}
@@ -48,11 +55,11 @@
                     <img src="{%static 'img/testCardImg.png' %}" class="card__image" alt="">
 
                 {% endif %}
-                
+            
             </a>
             <div class="card__body">
                 <a class="card__title link" href="{% url 'recipe_detail' recipe.slug %}" target="_blank">{{ recipe.name }}</a>
-
+                
                 {% if recipe.tags %}
 
                     <ul class="card__items">
@@ -65,28 +72,22 @@
                     
                     </ul>    
                     
-                {% endif %}    
+                {% endif %} 
 
                 <div class="card__items card__items_column">
-                    <p class="card__text"><span class="icon-time"></span> {{ recipe.time }}</p>
+                    <p class="card__text"><span class="icon-time"></span> {{ recipe.time }} мин.</p>
                     <p class="card__text"><span class="icon-user"></span> <a href="{% url 'profile' recipe.author %}" style="color: black">{{ recipe.author }}</a></p>
                 </div>
             </div>
             <div class="card__footer">
                 <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
-                
-                {% if user.is_authenticated %}
-        
-                    <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
-
-                {% endif %}
-
+                <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
             </div>
         </div>
-    
-    {% endfor %} 
-    
-</div>
+
+    {% endfor %}
+
+</div>    
 
 {% include "paginator.html" %}
 
@@ -98,19 +99,11 @@
     <script src="{%static 'js/components/MainCards.js' %}"></script>
     <script src="{%static 'js/components/Purchases.js' %}"></script>
     <script src="{%static 'js/components/Favorites.js' %}"></script>
+    <script src="{%static 'js/components/Subscribe.js' %}"></script>
     <script src="{%static 'js/config/config.js' %}"></script>
-    <script src="{%static 'js/components/CardList.js' %}"></script>
+    <script src="{%static 'js/components/AuthorRecipe.js' %}"></script>
     <script src="{%static 'js/components/Header.js' %}"></script>
     <script src="{%static 'js/api/Api.js' %}"></script>
+    <script src="{%static 'js/authorRecipe.js' %}"></script>
 
-    {% if user.is_authenticated %}
-        
-        <script src="{%static 'js/indexAuth.js' %}"></script>
-
-    {% else %}
-
-        <script src="{%static 'js/indexNotAuth.js' %}"></script>
-
-    {% endif %}
-    
 {% endblock %}

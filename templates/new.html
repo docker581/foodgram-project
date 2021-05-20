@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 {% block title %}Создание рецепта{% endblock %}
+{% load static %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/pages/form.css' %}">
+{% endblock %}
 {% block content %}
 {% load user_filters %}
 
@@ -28,3 +32,14 @@
 </div>
 
 {% endblock %} 
+
+
+{% block scripts %}
+
+    <script src="{%static 'js/config/config.js' %}"></script>
+    <script src="{%static 'js/components/Header.js' %}"></script>
+    <script src="{%static 'js/utils/debouncing.js' %}"></script>
+    <script src="{%static 'js/api/Api.js' %}"></script>
+    <script src="{%static 'js/formRecipe.js' %}"></script>  
+
+{% endblock %}

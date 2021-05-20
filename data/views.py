@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 
-from .models import Ingredient, Recipe, Tag, RecipeIngredient
+from .models import User, Recipe, Tag, RecipeIngredient
 from .forms import RecipeForm
 
 
@@ -16,9 +16,9 @@ def index(request):
         request,
         'index.html',
         {
-            'page': page,
-            'paginator': paginator,
             'tags': tags,
+            'page': page,
+            'paginator': paginator,           
         }
      )
 
@@ -51,5 +51,25 @@ def recipe_detail(request, recipe_slug):
         {
             'recipe': recipe,
             'recipe_ingredients': recipe_ingredients,
+        }
+    )
+
+
+@login_required
+def profile(request, username):
+    author = get_object_or_404(User, username=username)  
+    recipes = Recipe.objects.filter(author=author)
+    tags = Tag.objects.all()
+    paginator = Paginator(recipes, 10)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)     
+    return render(
+        request, 
+        'profile.html', 
+        {
+            'author': author,
+            'tags': tags,
+            'page': page,
+            'paginator': paginator,
         }
     )
