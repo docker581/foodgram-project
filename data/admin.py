@@ -11,7 +11,7 @@ class RecipeIngredientInline(admin.TabularInline):
 
 
 class TagAdmin(admin.ModelAdmin):
-    list_display = ['name', 'color']  
+    list_display = ['name', 'color', 'template_id']  
 
 
 class IngredientAdmin(admin.ModelAdmin):

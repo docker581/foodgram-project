@@ -14,6 +14,10 @@ class Tag(models.Model):
         max_length=50,
         verbose_name='Цвет тега',
     )
+    template_id = models.CharField(
+        max_length=50,
+        verbose_name='Название для атрибута id в шаблоне',
+    )
 
     class Meta:
         ordering = ['name']
@@ -120,7 +124,7 @@ class Favorite(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='recipes',
+        related_name='favorites',
         verbose_name='Рецепт',
     )
 
