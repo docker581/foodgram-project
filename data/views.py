@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
@@ -20,7 +21,7 @@ def index(request):
             'page': page,
             'paginator': paginator,           
         }
-     )
+    ) 
 
 
 @login_required
@@ -62,12 +63,31 @@ def profile(request, username):
     tags = Tag.objects.all()
     paginator = Paginator(recipes, 10)
     page_number = request.GET.get('page')
-    page = paginator.get_page(page_number)     
+    page = paginator.get_page(page_number)    
     return render(
         request, 
         'profile.html', 
         {
             'author': author,
+            'tags': tags,
+            'page': page,
+            'paginator': paginator,
+        }
+    )
+
+
+@login_required
+def favorite(request):
+    favorites = Recipe.objects.filter(favorites__user=request.user)
+    tags = Tag.objects.all()
+    paginator = Paginator(favorites, 5)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(
+        request, 
+        'favorite.html', 
+        {
+            'favorites': favorites,
             'tags': tags,
             'page': page,
             'paginator': paginator,

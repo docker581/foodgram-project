@@ -6,82 +6,92 @@
 {% endblock %}
 {% block content %}
 
-<div class="main__header">
-    <h1 class="main__title">Избранное</h1>
-    
-    {% if tags %}
+{% if page %}
 
-        <ul class="tags">
+    <div class="main__header">
+        <h1 class="main__title">Избранное</h1>
+        
+        {% if tags %}
 
-            {% for tag in tags %}
+            <ul class="tags">
 
-                <li class="tags__item">
-                    <a id="{{ tag.template_id }}" class="tags__checkbox tags__checkbox_style_{{ tag.color }} tags__checkbox_active" href="#"></a>
-                    <span class="tags__label">{{ tag.name }}</span>
-                </li>
+                {% for tag in tags %}
 
-            {% endfor %}    
+                    <li class="tags__item">
+                        <a id="{{ tag.template_id }}" class="tags__checkbox tags__checkbox_style_{{ tag.color }} tags__checkbox_active" href="#"></a>
+                        <span class="tags__label">{{ tag.name }}</span>
+                    </li>
 
-        </ul>
+                {% endfor %}    
 
-    {% endif %}
+            </ul>
 
-</div>
-<div class="card-list">
+        {% endif %}
 
-    {% for recipe in page %}
+    </div>
+    <div class="card-list">
 
-        <div class="card" data-id="{{ recipe.id }}">
-            
-            {% if recipe.image %}
+        {% for recipe in page %}
 
-                {% load thumbnail %}
-                {% thumbnail recipe.image "361x240" crop="center" upscale=True as im %}
-                    <img src="{{ im.url }}" class="card__image" alt="">
-                {% endthumbnail %}
-
-            {% else %}  
-
-                <!-- default image -->
-                {% load static %}
-                <img src="{%static 'img/testCardImg.png' %}" class="card__image" alt="">
-
-            {% endif %}
-
-            <div class="card__body">
-                <a class="card__title link" href="{% url 'recipe_detail' recipe.slug %}" target="_blank">{{ recipe.name }}</a>
+            <div class="card" data-id="{{ recipe.id }}">
                 
-                
-                {% if recipe.tags %}
+                {% if recipe.image %}
 
-                    <ul class="card__items">
-                    
-                        {% for tag in recipe.tags.all %}
+                    {% load thumbnail %}
+                    {% thumbnail recipe.image "361x240" crop="center" upscale=True as im %}
+                        <img src="{{ im.url }}" class="card__image" alt="">
+                    {% endthumbnail %}
 
-                            <li class="card__item"><span class="badge badge_style_{{ tag.color }}">{{ tag.name }}</span></li>
+                {% else %}  
 
-                        {% endfor %}
-                    
-                    </ul>    
-                    
+                    <!-- default image -->
+                    {% load static %}
+                    <img src="{%static 'img/testCardImg.png' %}" class="card__image" alt="">
+
                 {% endif %}
 
-                <div class="card__items card__items_column">
-                    <p class="card__text"><span class="icon-time"></span> {{ recipe.time }} мин.</p>
-                    <p class="card__text"><span class="icon-user"></span> {{ recipe.author }}</p>
+                <div class="card__body">
+                    <a class="card__title link" href="{% url 'recipe_detail' recipe.slug %}" target="_blank">{{ recipe.name }}</a>
+                    
+                    
+                    {% if recipe.tags %}
+
+                        <ul class="card__items">
+                        
+                            {% for tag in recipe.tags.all %}
+
+                                <li class="card__item"><span class="badge badge_style_{{ tag.color }}">{{ tag.name }}</span></li>
+
+                            {% endfor %}
+                        
+                        </ul>    
+                        
+                    {% endif %}
+
+                    <div class="card__items card__items_column">
+                        <p class="card__text"><span class="icon-time"></span> {{ recipe.time }} мин.</p>
+                        <p class="card__text"><span class="icon-user"></span> {{ recipe.author }}</p>
+                    </div>
+                </div>
+                <div class="card__footer">
+                    <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
+                    <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
                 </div>
             </div>
-            <div class="card__footer">
-                <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
-                <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
-            </div>
-        </div>
 
-    {% endfor }    
+        {% endfor %}    
 
-</div>   
+    </div>   
 
-{% include "paginator.html" %}
+    {% include "paginator.html" %}
+
+{% else %}
+
+    <div class="main__header">
+        <h1 class="main__title">Избранных рецептов нет</h1>
+    </div>    
+
+{% endif %}
 
 {% endblock %}
 

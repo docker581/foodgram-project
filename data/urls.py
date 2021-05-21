@@ -10,5 +10,6 @@ urlpatterns = [
         views.recipe_detail, 
         name='recipe_detail',
     ),
-    path('<str:username>/', views.profile, name='profile'),
+    path('favorite/', views.favorite, name='favorite'),
+    path('<str:username>/', views.profile, name='profile'), 
 ]
