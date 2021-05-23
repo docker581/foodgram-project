@@ -4,32 +4,27 @@
 {% block styles %}
     <link rel="stylesheet" href="{% static 'css/pages/index.css' %}">
 {% endblock %}
+{% load user_filters %}
 {% block content %}
 
 <div class="main__header">
     <h1 class="main__title">{{ author }}</h1>
 
     {% if tags %}
-
         <ul class="tags">
-
             {% for tag in tags %}
-
                 <li class="tags__item">
                     <a id="{{ tag.template_id }}" class="tags__checkbox tags__checkbox_style_{{ tag.color }} tags__checkbox_active" href="#"></a>
                     <span class="tags__label">{{ tag.name }}</span>
                 </li>
-
             {% endfor %}    
-
         </ul>
-
     {% endif %}
 
 </div>
 
 {% if author != request.user %}
-    <div class="author-subscribe" data-author="323">
+    <div class="author-subscribe" data-author="{{ recipe.author }}">
         <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></p>
     </div>
 {% endif %}    
@@ -38,22 +33,17 @@
 
     {% for recipe in page %}
 
-        <div class="card" data-id="120">
+        <div class="card" data-id="{{ recipe.id }}">
             <a href="{% url 'recipe_detail' recipe.slug %}" class="link" target="_blank">
                 
                 {% if recipe.image %}
-
                     {% load thumbnail %}
                     {% thumbnail recipe.image "361x240" crop="center" upscale=True as im %}
                         <img src="{{ im.url }}" class="card__image" alt="">
                     {% endthumbnail %}
-
                 {% else %}  
-
                     <!-- default image -->
-                    {% load static %}
                     <img src="{%static 'img/testCardImg.png' %}" class="card__image" alt="">
-
                 {% endif %}
             
             </a>
@@ -61,17 +51,11 @@
                 <a class="card__title link" href="{% url 'recipe_detail' recipe.slug %}" target="_blank">{{ recipe.name }}</a>
                 
                 {% if recipe.tags %}
-
-                    <ul class="card__items">
-                    
+                    <ul class="card__items">                   
                         {% for tag in recipe.tags.all %}
-
                             <li class="card__item"><span class="badge badge_style_{{ tag.color }}">{{ tag.name }}</span></li>
-
-                        {% endfor %}
-                    
-                    </ul>    
-                    
+                        {% endfor %}                   
+                    </ul>                       
                 {% endif %} 
 
                 <div class="card__items card__items_column">
@@ -81,7 +65,15 @@
             </div>
             <div class="card__footer">
                 <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
-                <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
+                
+                {% if user.is_authenticated %}
+                    {% if recipe|isFavorite:request.user %}
+                        <button class="button button_style_none" name="favorites"><span class="icon-favorite icon-favorite_active"></span></button>
+                    {% else %}
+                        <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
+                    {% endif %}
+                {% endif %}
+
             </div>
         </div>
 
@@ -89,7 +81,7 @@
 
 </div>    
 
-{% include "paginator.html" %}
+{% include "includes/paginator.html" %}
 
 {% endblock %}
 

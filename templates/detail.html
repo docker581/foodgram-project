@@ -4,46 +4,45 @@
 {% block styles %}
     <link rel="stylesheet" href="{% static 'css/pages/single.css' %}">
 {% endblock %}
+{% load user_filters %}
 {% block content %}
 
 <div class="single-card" data-id="{{ recipe.id }}" data-author="{{ recipe.author.id }}">
 
     {% if recipe.image %}
-
         {% load thumbnail %}
         {% thumbnail recipe.image "480x480" crop="center" upscale=True as im %}
             <img src="{{ im.url }}" class="single-card__image" alt="">
         {% endthumbnail %}
-
     {% else %}  
-
         <!-- default image -->
-        {% load static %}
         <img src="{%static 'img/testCardImg.png' %}" class="single-card__image" alt="">
-
     {% endif %}
 
     <div class="single-card__info">
         <div class="single-card__header-info">
             <h1 class="single-card__title">{{ recipe.name }}</h1>
             <div class="single-card__favorite">
-                <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite icon-favorite_big"></span></button>
-                <div class="single-card__favorite-tooltip tooltip">Добавить в избранное</div>
+                
+                {% if user.is_authenticated %}
+                    {% if recipe|isFavorite:request.user %}
+                        <button class="button button_style_none" name="favorites"><span class="icon-favorite icon-favorite_active"></span></button>
+                        <div class="single-card__favorite-tooltip tooltip">Убрать из избранного</div>
+                    {% else %}
+                        <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
+                        <div class="single-card__favorite-tooltip tooltip">Добавить в избранное</div>
+                    {% endif %}
+                {% endif %}
+
             </div>
         </div>
 
         {% if recipe.tags %}
-
-            <ul class="single-card__items">
-            
+            <ul class="single-card__items">           
                 {% for tag in recipe.tags.all %}
-
                     <li class="single-card__item"><span class="badge badge_style_{{ tag.color }}">{{ tag.name }}</span></li>
-
-                {% endfor %}
-            
-            </ul>    
-            
+                {% endfor %}           
+            </ul>               
         {% endif %}
 
         <div class="single-card__items single-card__items_column">
@@ -62,15 +61,10 @@
             <div class="single-card__items single-card__items_column">
                 
                 {% for ingredient in recipe.ingredients.all %}
-
                     <!-- retrieve ingredient quantity -->
-                    {% load user_filters %}
                     {% for recipe_ingredient in recipe_ingredients|findIngredient:ingredient %}
-
-                        <p class=" single-card__section-item">{{ ingredient.name }} - {{ recipe_ingredient.quantity }} {{ ingredient.dimension }}</p>
-                        
+                        <p class=" single-card__section-item">{{ ingredient.name }} - {{ recipe_ingredient.quantity }} {{ ingredient.dimension }}</p>                       
                     {% endfor %}
-
                 {% endfor %}
                 
             </div>
@@ -96,14 +90,10 @@
     <script src="{%static 'js/components/Header.js' %}"></script>
     <script src="{%static 'js/api/Api.js' %}"></script>
     
-    {% if user.is_authenticated %}
-        
+    {% if user.is_authenticated %}       
         <script src="{%static 'js/singlePage.js' %}"></script>
-
     {% else %}
-
         <script src="{%static 'js/singlePageNotAuth.js' %}"></script>
-
     {% endif %}
 
 {% endblock %}

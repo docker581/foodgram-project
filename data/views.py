@@ -1,10 +1,23 @@
-from django.http import HttpResponse
+from django.views.generic.base import TemplateView
 from django.shortcuts import redirect, render, get_object_or_404
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 
 from .models import User, Recipe, Tag, RecipeIngredient
 from .forms import RecipeForm
+
+
+def page_not_found(request, exception):
+    return render(
+        request, 
+        "misc/404.html", 
+        {"path": request.path}, 
+        status=404,
+    )
+
+
+def server_error(request):
+    return render(request, "misc/500.html", status=500)
 
 
 def index(request):
@@ -93,3 +106,39 @@ def favorite(request):
             'paginator': paginator,
         }
     )
+
+
+class AboutAuthorView(TemplateView):
+    template_name = 'static.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Об авторе'
+        context['image'] = 'author.jpg'
+        context['author'] = {
+            'name': 'Денис Докторов',
+            'github_url' : 'https://github.com/docker581/'
+        }
+        context['list_name'] = 'Интересы'  
+        context['list'] = [
+            'Darkwave',
+            'Game theory',
+            'Travels',
+        ]
+        return context 
+
+
+class AboutTechView(TemplateView):
+    template_name = 'static.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Технологии'
+        context['image'] = 'tech.jpg'
+        context['list_name'] = 'Стек технологий'
+        context['list'] = [
+            'Python 3.8.5',
+            'Django 3.0.5',
+            'Django Rest Framework (DRF) 3.12.4',
+        ]
+        return context
