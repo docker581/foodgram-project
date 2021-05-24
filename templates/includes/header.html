@@ -6,8 +6,8 @@
                     <li class="nav__item {% if request.resolver_match.url_name == 'index' or request.resolver_match.url_name == 'profile' or request.resolver_match.url_name == 'recipe_detail' %}nav__item_active{% endif %}">
                         <a href="{% url 'index' %}" class="nav__link link">Рецепты</a>
                     </li>
-                    <li class="nav__item">
-                        <a href="" class="nav__link link">Мои подписки</a>
+                    <li class="nav__item {% if request.resolver_match.url_name == 'subscriptions' %}nav__item_active{% endif %}">
+                        <a href="{% url 'subscriptions' %}" class="nav__link link">Мои подписки</a>
                     </li>
                     <li class="nav__item {% if request.resolver_match.url_name == 'new_recipe' %}nav__item_active{% endif %}">
                         <a href="{% url 'new_recipe' %}" class="nav__link link">Создать рецепт</a>
@@ -30,8 +30,8 @@
                 </ul>
             {% else %}
                 <ul class="nav__items list">
-                    <li class="nav__item">
-                        <a href="" class="nav__link link">Рецепты</a>
+                    <li class="nav__item {% if request.resolver_match.url_name == 'index' or request.resolver_match.url_name == 'profile' or request.resolver_match.url_name == 'recipe_detail' %}nav__item_active{% endif %}">
+                        <a href="{% url 'index' %}" class="nav__link link">Рецепты</a>
                     </li>
                     <li class="nav__item">
                         <a href="" class="nav__link link">Список покупок</a>

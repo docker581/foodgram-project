@@ -140,7 +140,7 @@ class AboutAuthorView(TemplateView):
         }
         context['list_name'] = 'Интересы'  
         context['list'] = [
-            'Darkwave',
+            'Darkwave / synthpop',
             'Game theory',
             'Travels',
         ]

@@ -31,10 +31,11 @@ class RemoveFavoriteAPIView(views.APIView):
 class AddSubscriptAPIView(views.APIView):
     def post(self, request, format=None):
         author = User.objects.get(id=request.data['id'])
-        Subscription.objects.get_or_create(
-            author = author,
-            user=request.user,
-        )
+        if author != request.user:
+            Subscription.objects.get_or_create(
+                author = author,
+                user=request.user,
+            )
         return response.Response({'success': True}, status=status.HTTP_200_OK)
 
 
