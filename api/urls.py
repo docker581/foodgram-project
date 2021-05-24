@@ -3,8 +3,10 @@ from rest_framework.routers import DefaultRouter
 
 from .views import (
     IngredientViewSet, 
-    AddFavoritesAPIView, 
-    RemoveFavoritesAPIView,
+    AddFavoriteAPIView, 
+    RemoveFavoriteAPIView,
+    AddSubscriptAPIView, 
+    RemoveSubscriptAPIView,
 )
 
 router = DefaultRouter()
@@ -16,10 +18,18 @@ urlpatterns = [
 urlpatterns += [
     path(
         'v1/favorites', 
-        AddFavoritesAPIView.as_view(), 
+        AddFavoriteAPIView.as_view(), 
     ),
     path(
         'v1/favorites/<int:id>', 
-        RemoveFavoritesAPIView.as_view(), 
+        RemoveFavoriteAPIView.as_view(), 
+    ),
+    path(
+        'v1/subscriptions', 
+        AddSubscriptAPIView.as_view(), 
+    ),
+    path(
+        'v1/subscriptions/<int:id>', 
+        RemoveSubscriptAPIView.as_view(), 
     ),
 ]

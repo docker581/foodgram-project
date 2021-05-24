@@ -3,7 +3,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 
-from .models import User, Recipe, Tag, RecipeIngredient
+from .models import User, Recipe, Tag, RecipeIngredient, Subscription
 from .forms import RecipeForm
 
 
@@ -90,7 +90,7 @@ def profile(request, username):
 
 
 @login_required
-def favorite(request):
+def favorites(request):
     favorites = Recipe.objects.filter(favorites__user=request.user)
     tags = Tag.objects.all()
     paginator = Paginator(favorites, 5)
@@ -98,10 +98,29 @@ def favorite(request):
     page = paginator.get_page(page_number)
     return render(
         request, 
-        'favorite.html', 
+        'favorites.html', 
         {
             'favorites': favorites,
             'tags': tags,
+            'page': page,
+            'paginator': paginator,
+        }
+    )
+
+
+@login_required
+def subscriptions(request):
+    subscriptions = Subscription.objects.filter(
+        author__subscriptions__user=request.user,
+    )
+    paginator = Paginator(subscriptions, 3)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(
+        request, 
+        'subscriptions.html', 
+        {
+            'subscriptions': subscriptions,
             'page': page,
             'paginator': paginator,
         }

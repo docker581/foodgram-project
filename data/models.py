@@ -132,11 +132,37 @@ class Favorite(models.Model):
         constraints = [
             UniqueConstraint(
                 fields=['user', 'recipe'],
-                name='unique_favorite_recipe',
+                name='unique_user_recipe',
             )
         ]
         verbose_name = 'Избранный рецепт'
         verbose_name_plural = 'Избранное'
 
     def __str__(self):
-        return f'{self.recipe} ({self.user})'   
+        return f'{self.recipe} ({self.user})'
+
+        
+class Subscription(models.Model):
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='subscriptions',
+        verbose_name='Автор',
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='authors',
+        verbose_name='Подписчик',
+    )
+
+    class Meta:
+        models.UniqueConstraint(
+            fields=['author', 'user'],
+            name='unique_author_user',
+        )
+        verbose_name = 'Подписка'
+        verbose_name_plural='Подписки'
+    
+    def __str__(self):
+        return f'{self.author} ({self.user})'           
