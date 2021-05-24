@@ -6,8 +6,8 @@ register = template.Library()
 
 
 @register.filter 
-def addclass(field, css):
-    return field.as_widget(attrs={"class": css})
+def addclass(field, classname):
+    return field.as_widget(attrs={"class": classname})
 
 
 @register.filter
@@ -23,3 +23,8 @@ def isFavorite(recipe, user):
 @register.filter
 def isSubscription(author, user):
     return Subscription.objects.filter(author=author, user=user).exists()    
+
+
+@register.filter
+def countRestRecipes(total_number, specified_number):
+    return total_number - specified_number
