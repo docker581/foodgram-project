@@ -19,7 +19,7 @@
             <div class="form__group" aria-required={% if field.field.required %}"true"{% else %}"false"{% endif %}>
                 <label for="{{ field.id_for_label }}" class="form__label">{{ field.label }}{% if field.field.required %}*{% endif %}</label>
                 <div class="form__field-group">
-                    {{ field|addclass:"form__input" }}
+                    {{ field|addClass:"form__input" }}
                 </div>
             </div>
         {% endfor %}    

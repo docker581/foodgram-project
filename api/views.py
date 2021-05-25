@@ -5,10 +5,14 @@ from .serializers import IngredientSerializer
 
 
 class IngredientViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
-    queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['name']
+
+    def get_queryset(self):
+        queryset = Ingredient.objects.all()
+        ingredient = self.request.query_params.get('query')
+        if ingredient is not None:
+            queryset = queryset.filter(name__startswith=ingredient)
+        return queryset
 
 
 class AddFavoriteAPIView(views.APIView):

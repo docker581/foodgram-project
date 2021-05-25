@@ -3,7 +3,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 
-from .models import User, Recipe, Tag, RecipeIngredient, Subscription
+from .models import User, Tag, Ingredient, Recipe, RecipeIngredient, Subscription
 from .forms import RecipeForm
 
 
@@ -37,22 +37,63 @@ def index(request):
     ) 
 
 
-@login_required
+def get_ingredients(request):
+    ingredients = {}
+    for key in request.POST:
+        if key.startswith('nameIngredient'):
+            value_ingredient = key[15:]
+            ingredients[request.POST[key]] = request.POST[
+                'valueIngredient_' + value_ingredient
+            ]    
+    return ingredients
+
+
+@login_required    
 def new_recipe(request):
     form = RecipeForm(request.POST or None, files=request.FILES or None)
-    if request.method == 'POST':
-        if form.is_valid():
-            instance = form.save(commit=False)
-            instance.author=request.user
-            instance.save()
-            return redirect('index')
-    return render(
-        request, 
-        'new.html', 
-        {
-            'form': form, 
-        }
-    )
+    ingredients = get_ingredients(request)
+    if not form.is_valid():
+        print(ingredients)
+        return render(
+            request, 
+            'new.html', 
+            {
+                'form': form, 
+            }
+        )   
+    recipe = form.save(commit=False)
+    recipe.user = request.user
+    recipe.save()
+    RecipeIngredient.objects.filter(recipe=recipe).delete()
+    objects = []
+    for name, quantity in ingredients.items():
+        ingredient = get_object_or_404(Ingredient, name=name)
+        objects.append(RecipeIngredient(
+            recipe=recipe,
+            ingredient=ingredient,
+            quantity=quantity,
+        ))
+    RecipeIngredient.objects.bulk_create(objects)
+    form.save_m2m()
+    return redirect('index')
+
+
+# @login_required
+# def new_recipe(request):
+#     form = RecipeForm(request.POST or None, files=request.FILES or None)
+#     if request.method == 'POST':
+#         if form.is_valid():
+#             instance = form.save(commit=False)
+#             instance.author=request.user
+#             instance.save()
+#             return redirect('index')
+#     return render(
+#         request, 
+#         'new.html', 
+#         {
+#             'form': form, 
+#         }
+#     )
 
 
 @login_required

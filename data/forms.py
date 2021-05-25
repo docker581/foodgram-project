@@ -14,3 +14,6 @@ class RecipeForm(forms.ModelForm):
             'description', 
             'image',
         )
+        widgets = {
+            'description': forms.Textarea(attrs={'rows':8}),
+        }

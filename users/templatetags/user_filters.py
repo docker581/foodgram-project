@@ -6,7 +6,7 @@ register = template.Library()
 
 
 @register.filter 
-def addclass(field, classname):
+def addClass(field, classname):
     return field.as_widget(attrs={"class": classname})
 
 
