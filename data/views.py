@@ -62,7 +62,7 @@ def new_recipe(request):
             }
         )   
     recipe = form.save(commit=False)
-    recipe.user = request.user
+    recipe.author = request.user
     recipe.save()
     RecipeIngredient.objects.filter(recipe=recipe).delete()
     objects = []

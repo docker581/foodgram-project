@@ -28,7 +28,14 @@
 
                     {% for tag in form.fields.tags.choices.queryset %}
                         <div class="tags__item">
-                            <input type="checkbox" name="{{ tag.template_id }}" id="id_{{ tag.template_id }}" class="tags__checkbox tags__checkbox_style_{{ tag.color }} checked">
+                            <input 
+                                type="checkbox" 
+                                name="tags" 
+                                value="{{ tag.id }}"
+                                id="id_{{ tag.template_id }}"
+                                class="tags__checkbox tags__checkbox_style_{{ tag.color }}"
+                                {% if tag in form.tags.all %}checked{% endif %}
+                            >
                             <label for="id_{{ tag.template_id }}" class="tags__label">{{ tag.name }}</label>
                         </div>    
                     {% endfor %}
@@ -54,6 +61,13 @@
             </div>
         </div>
         <div class="form__group">
+            <label for="id_slug" class="form__label">URL-имя</label>
+            <div class="form__field-group">
+                {{ form.slug|addClass:'form__input' }}
+                <span class="form__error"></span>
+            </div>
+        </div>
+        <div class="form__group">
             <label for="id_time" class="form__label">Время приготовления</label>
             <div class="form__field-group form__field-group_time">
                 {{ form.time|addClass:'form__input' }}
@@ -65,7 +79,7 @@
             <label for="id_description" class="form__label">Описание</label>
             <div class="form__field-group">
                 {{ form.description|addClass:'form__textarea' }}
-                <span class="form__error">{{ form.errors }}</span>
+                <span class="form__error"></span>
             </div>
         </div>
         <div class="form__group">

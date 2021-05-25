@@ -7,13 +7,14 @@ class RecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
         fields = (
-            'name', 
+            'name',
             'tags', 
-            'ingredients', 
             'time', 
             'description', 
             'image',
+            'slug',
         )
         widgets = {
             'description': forms.Textarea(attrs={'rows':8}),
+            'tags': forms.CheckboxSelectMultiple()
         }
