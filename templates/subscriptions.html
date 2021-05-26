@@ -15,7 +15,6 @@
     <div class="card-list">
 
         {% for subscription in page %}
-
             <div class="card-list">
                 <div class="card-user" data-author="{{ subscription.author.id }}" style="min-width: 330px;">
                 <div class="card-user__header">
@@ -46,7 +45,9 @@
 
                         {% if subscription.author.recipes.count > 3 %}
                             <li class="card-user__item">
-                                <a href="{% url 'profile' subscription.author %}" class="card-user__link link">Остальные ({{ subscription.author.recipes.count|countRestRecipes:3 }}) рецепты автора...</a>
+                                <a href="{% url 'profile' subscription.author %}" class="card-user__link link">
+                                    Остальные ({{ subscription.author.recipes.count|countRestRecipes:3 }}) рецепты автора...
+                                </a>
                             </li>
                         {% endif %}    
                     </ul>
@@ -65,7 +66,6 @@
                 {% endif %}
                 
             </div>
-
         {% endfor %}    
 
     </div>   

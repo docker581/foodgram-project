@@ -14,7 +14,11 @@
         <ul class="tags">
             {% for tag in tags %}
                 <li class="tags__item">
-                    <a id="{{ tag.template_id }}" class="tags__checkbox tags__checkbox_style_{{ tag.color }} tags__checkbox_active" href="#"></a>
+                    <a 
+                        id="{{ tag.template_id }}" 
+                        class="tags__checkbox tags__checkbox_style_{{ tag.color }} tags__checkbox_active" 
+                        href="#">
+                    </a>
                     <span class="tags__label">{{ tag.name }}</span>
                 </li>
             {% endfor %}    
@@ -24,8 +28,7 @@
 </div>
 <div class="card-list">
 
-    {% for recipe in page %}
-    
+    {% for recipe in page %}  
         <div class="card" data-id="{{ recipe.id }}">
             <a href="{% url 'recipe_detail' recipe.slug %}" class="link" target="_blank">
 
@@ -53,23 +56,40 @@
 
                 <div class="card__items card__items_column">
                     <p class="card__text"><span class="icon-time"></span> {{ recipe.time }}</p>
-                    <p class="card__text"><span class="icon-user"></span> <a href="{% url 'profile' recipe.author %}" style="color: black">{{ recipe.author }}</a></p>
+                    <p class="card__text">
+                        <span class="icon-user"></span> 
+                        <a href="{% url 'profile' recipe.author %}" style="color: black">{{ recipe.author }}</a>
+                    </p>
                 </div>
             </div>
             <div class="card__footer">
-                <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
+                
+                {% if user.is_authenticated %}
+                    {% if recipe|isPurchase:request.user %}
+                        <button class="button button_style_light-blue" name="purchases">
+                            <span class="icon-check button__icon"></span>Рецепт добавлен
+                        </button>
+                    {% else %}
+                        <button class="button button_style_light-blue" name="purchases" data-out>
+                            <span class="icon-plus button__icon"></span>Добавить в покупки
+                        </button>
+                    {% endif %}
+                {% endif %}
                 
                 {% if user.is_authenticated %}
                     {% if recipe|isFavorite:request.user %}
-                        <button class="button button_style_none" name="favorites"><span class="icon-favorite icon-favorite_active"></span></button>
+                        <button class="button button_style_none" name="favorites">
+                            <span class="icon-favorite icon-favorite_active"></span>
+                        </button>
                     {% else %}
-                        <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
+                        <button class="button button_style_none" name="favorites" data-out>
+                            <span class="icon-favorite"></span>
+                        </button>
                     {% endif %}
                 {% endif %}
 
             </div>
-        </div>
-    
+        </div>   
     {% endfor %} 
     
 </div>

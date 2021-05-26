@@ -17,6 +17,8 @@ urlpatterns = [
     ),
     path('favorites/', views.favorites, name='favorites'),
     path('subscriptions/', views.subscriptions, name='subscriptions'),
+    path('purchases/', views.purchases, name='purchases'),
+    path('download/', views.download_ingredients, name='download'),
     path('author/', views.AboutAuthorView.as_view(), name='author'),
     path('tech/', views.AboutTechView.as_view(), name='tech'),
     path('<str:username>/', views.profile, name='profile'), 

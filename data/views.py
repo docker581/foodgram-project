@@ -1,9 +1,17 @@
+from django.http import HttpResponse
 from django.views.generic.base import TemplateView
 from django.shortcuts import redirect, render, get_object_or_404
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 
-from .models import User, Tag, Ingredient, Recipe, RecipeIngredient, Subscription
+from .models import (
+    User, 
+    Tag, 
+    Ingredient, 
+    Recipe, 
+    RecipeIngredient, 
+    Subscription,
+)
 from .forms import RecipeForm
 
 
@@ -123,7 +131,6 @@ def recipe_edit(request, recipe_slug):
     )   
 
 
-@login_required
 def recipe_detail(request, recipe_slug):
     recipe = get_object_or_404(Recipe, slug=recipe_slug)
     recipe_ingredients = RecipeIngredient.objects.filter(recipe=recipe)
@@ -137,7 +144,6 @@ def recipe_detail(request, recipe_slug):
     )
 
 
-@login_required
 def profile(request, username):
     author = get_object_or_404(User, username=username)  
     recipes = Recipe.objects.filter(author=author)
@@ -193,6 +199,52 @@ def subscriptions(request):
             'paginator': paginator,
         }
     )
+
+
+@login_required
+def purchases(request):
+    purchases = Recipe.objects.filter(purchases__user=request.user)
+    return render(
+        request, 
+        'purchases.html', 
+        {
+            'purchases': purchases,
+        }
+    )    
+
+
+@login_required
+def download_ingredients(request):
+    ingredients = RecipeIngredient.objects.filter(
+        recipe__in=Recipe.objects.filter(
+            purchases__user=request.user,
+        )
+    )
+    dict_ = {}
+    for ingredient in ingredients:
+        key = (
+            f'{ingredient.ingredient.name} '
+            f'({ingredient.ingredient.dimension})'
+        )    
+        value = ingredient.quantity
+        if key in dict_:
+            dict_[key] += value
+        else:
+            dict_[key] = value 
+
+    ingredients_list = ''
+    for key, value in dict_.items():
+        ingredients_list += f'{key} - {value}'
+        ingredients_list += '\r\n'
+    response = HttpResponse(
+        ingredients_list, 
+        content_type='application/text charset=utf-8',
+    )
+    response['Content-Disposition'] = (
+        'attachment; filename="ingredients_list.txt"'
+    )
+    print(ingredients_list)
+    return response
 
 
 class AboutAuthorView(TemplateView):

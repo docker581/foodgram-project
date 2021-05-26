@@ -58,12 +58,16 @@ class RemoveSubscriptionAPIView(views.APIView):
 
 
 class PurchaseAPIView(views.APIView):
-    def post(self, request, format=None):
-        purchases_number = Purchase.objects.count()
-        return response.Response({'success': True}, data=purchases_number, status=status.HTTP_200_OK)
+    def get(self, request, format=None):
+        purchases = Purchase.objects.all()
+        return response.Response(
+            {'success': True}, 
+            data=purchases, 
+            status=status.HTTP_200_OK,
+        )
 
     def post(self, request, format=None):
-        purchase = Purchase.objects.get(id=request.data['id'])
+        purchase = Recipe.objects.get(id=request.data['id'])
         Purchase.objects.get_or_create(
             user=request.user,
             purchase=purchase,
@@ -73,6 +77,6 @@ class PurchaseAPIView(views.APIView):
 
 class RemovePurchaseAPIView(views.APIView):
     def delete(self, request, id, format=None):
-        purchase = Purchase.objects.get(id=id)
+        purchase = Recipe.objects.get(id=id)
         Purchase.objects.filter(purchase=purchase, user=request.user).delete()
         return response.Response({'success': True}, status=status.HTTP_200_OK)

@@ -1,6 +1,6 @@
 from django import template
 
-from data.models import Favorite, Subscription
+from data.models import Favorite, Subscription, Purchase
 
 register = template.Library()
 
@@ -28,3 +28,8 @@ def isSubscription(author, user):
 @register.filter
 def countRestRecipes(total_number, specified_number):
     return total_number - specified_number
+
+
+@register.filter
+def isPurchase(purchase, user):
+    return Purchase.objects.filter(user=user, purchase=purchase).exists()     

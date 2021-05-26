@@ -23,14 +23,18 @@
 
 </div>
 
-{% if author != request.user %}
+{% if user.is_authenticated and request.user != author %}
     {% if author|isSubscription:request.user %}
         <div class="author-subscribe" data-author="{{ author.id }}">
-            <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe">Отписаться от автора</button></p>
+            <p style="padding: 0 0 2em 0;">
+                <button class="button button_style_light-blue button_size_subscribe" name="subscribe">Отписаться от автора</button>
+            </p>
         </div>
     {% else %}
         <div class="author-subscribe" data-author="{{ author.id }}">
-            <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></p>
+            <p style="padding: 0 0 2em 0;">
+                <button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button>
+            </p>
         </div>
     {% endif %}
 {% endif %}    
@@ -66,11 +70,25 @@
 
                 <div class="card__items card__items_column">
                     <p class="card__text"><span class="icon-time"></span> {{ recipe.time }} мин.</p>
-                    <p class="card__text"><span class="icon-user"></span> <a href="{% url 'profile' recipe.author %}" style="color: black">{{ recipe.author }}</a></p>
+                    <p class="card__text">
+                        <span class="icon-user"></span> 
+                        <a href="{% url 'profile' recipe.author %}" style="color: black">{{ recipe.author }}</a>
+                    </p>
                 </div>
             </div>
             <div class="card__footer">
-                <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
+
+                {% if user.is_authenticated %}
+                    {% if recipe|isPurchase:request.user %}
+                        <button class="button button_style_light-blue" name="purchases">
+                            <span class="icon-check button__icon"></span>Рецепт добавлен
+                        </button>
+                    {% else %}
+                        <button class="button button_style_light-blue" name="purchases" data-out>
+                            <span class="icon-plus button__icon"></span>Добавить в покупки
+                        </button>
+                    {% endif %}
+                {% endif %}
                 
                 {% if user.is_authenticated %}
                     {% if recipe|isFavorite:request.user %}
