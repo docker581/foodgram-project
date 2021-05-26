@@ -51,7 +51,7 @@
                 <li class="single-card__item"><p class="single-card__text"><span class="icon-user"></span> {{ recipe.author }}</p></li>
                 
                 {% if recipe.author == request.user %}    
-                    <li class="single-card__item">  <a style="margin-left: 2.5em" href="#" class="single-card__text">Редактировать рецепт</a></li>
+                    <li class="single-card__item">  <a style="margin-left: 2.5em" href="{% url 'recipe_edit' recipe.slug %}" class="single-card__text">Редактировать рецепт</a></li>
                 {% endif %}
             
             </ul>
@@ -93,19 +93,19 @@
 
 {% block scripts %}
 
-    <script src="{%static 'js/components/Purchases.js' %}"></script>
-    <script src="{%static 'js/components/Favorites.js' %}"></script>
-    <script src="{%static 'js/components/Subscribe.js' %}"></script>
-    <script src="{%static 'js/config/config.js' %}"></script>
-    <script src="{%static 'js/components/MainCards.js' %}"></script>
-    <script src="{%static 'js/components/SingleCard.js' %}"></script>
-    <script src="{%static 'js/components/Header.js' %}"></script>
-    <script src="{%static 'js/api/Api.js' %}"></script>
-    
-    {% if user.is_authenticated %}       
-        <script src="{%static 'js/singlePage.js' %}"></script>
-    {% else %}
-        <script src="{%static 'js/singlePageNotAuth.js' %}"></script>
-    {% endif %}
+<script src="{%static 'js/components/Purchases.js' %}"></script>
+<script src="{%static 'js/components/Favorites.js' %}"></script>
+<script src="{%static 'js/components/Subscribe.js' %}"></script>
+<script src="{%static 'js/config/config.js' %}"></script>
+<script src="{%static 'js/components/MainCards.js' %}"></script>
+<script src="{%static 'js/components/SingleCard.js' %}"></script>
+<script src="{%static 'js/components/Header.js' %}"></script>
+<script src="{%static 'js/api/Api.js' %}"></script>
+
+{% if user.is_authenticated %}       
+    <script src="{%static 'js/singlePage.js' %}"></script>
+{% else %}
+    <script src="{%static 'js/singlePageNotAuth.js' %}"></script>
+{% endif %}
 
 {% endblock %}

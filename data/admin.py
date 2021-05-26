@@ -7,12 +7,14 @@ from .models import (
     RecipeIngredient, 
     Favorite, 
     Subscription,
+    Purchase,
 )
 
 
 class RecipeIngredientInline(admin.TabularInline):
     model = RecipeIngredient
-    extra = 1
+    min_num = 1
+    extra = 0
     raw_id_fields = ['ingredient']
     list_display = ['recipe', 'ingredient', 'id']
 
@@ -39,3 +41,4 @@ admin.site.register(Recipe, RecipeAdmin)
 admin.site.register(RecipeIngredient)
 admin.site.register(Favorite)
 admin.site.register(Subscription)
+admin.site.register(Purchase)

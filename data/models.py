@@ -139,7 +139,7 @@ class Favorite(models.Model):
         verbose_name_plural = 'Избранное'
 
     def __str__(self):
-        return f'{self.recipe} ({self.user})'
+        return f'Избранный рецепт {self.recipe} у {self.user}'
 
         
 class Subscription(models.Model):
@@ -165,4 +165,32 @@ class Subscription(models.Model):
         verbose_name_plural='Подписки'
     
     def __str__(self):
-        return f'{self.author} ({self.user})'           
+        return f'Подписка на {self.author} у {self.user}'           
+
+
+class Purchase(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='purchases',
+        verbose_name='Пользователь',
+    )
+    purchase = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='purchases',
+        verbose_name='Покупка',
+    )
+
+    class Meta:
+        constraints = [
+            UniqueConstraint(
+                fields=['user', 'purchase'],
+                name='unique_user_purchase',
+            )
+        ]
+        verbose_name = 'Покупка'
+        verbose_name_plural = 'Покупки'
+
+    def __str__(self):
+        return f'Покупка {self.purchase} у {self.user}'

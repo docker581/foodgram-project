@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Создание рецепта{% endblock %}
+{% block title %}{{ page_title }}{% endblock %}
 {% load static %}
 {% block styles %}
     <link rel="stylesheet" href="{% static 'css/pages/form.css' %}">
@@ -8,7 +8,7 @@
 {% block content %}
 
 <div class="main__header">
-    <h1 class="main__title">Создание рецепта</h1>
+    <h1 class="main__title">{{ page_title }}</h1>
 </div>
 <div class="form-container">
     <form class="form" method="post" enctype="multipart/form-data">
@@ -90,7 +90,7 @@
             </div>
         </div>
         <div class="form__footer">
-            <button class="button button_style_blue" type="submit">Создать рецепт</button>
+            <button class="button button_style_blue" type="submit">{{ page_button }}</button>
         </div>
     </form>
 </div>
@@ -100,10 +100,10 @@
 
 {% block scripts %}
 
-    <script src="{%static 'js/config/config.js' %}"></script>
-    <script src="{%static 'js/components/Header.js' %}"></script>
-    <script src="{%static 'js/utils/debouncing.js' %}"></script>
-    <script src="{%static 'js/api/Api.js' %}"></script>
-    <script src="{%static 'js/formRecipe.js' %}"></script>  
+<script src="{%static 'js/config/config.js' %}"></script>
+<script src="{%static 'js/components/Header.js' %}"></script>
+<script src="{%static 'js/utils/debouncing.js' %}"></script>
+<script src="{%static 'js/api/Api.js' %}"></script>
+<script src="{%static 'js/formRecipe.js' %}"></script>  
 
 {% endblock %}

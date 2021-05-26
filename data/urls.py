@@ -10,6 +10,11 @@ urlpatterns = [
         views.recipe_detail, 
         name='recipe_detail',
     ),
+    path(
+        'recipe/<slug:recipe_slug>/edit/', 
+        views.recipe_edit, 
+        name='recipe_edit',
+    ),
     path('favorites/', views.favorites, name='favorites'),
     path('subscriptions/', views.subscriptions, name='subscriptions'),
     path('author/', views.AboutAuthorView.as_view(), name='author'),

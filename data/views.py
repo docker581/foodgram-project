@@ -53,12 +53,13 @@ def new_recipe(request):
     form = RecipeForm(request.POST or None, files=request.FILES or None)
     ingredients = get_ingredients(request)
     if not form.is_valid():
-        print(ingredients)
         return render(
             request, 
             'new.html', 
             {
-                'form': form, 
+                'form': form,
+                'page_title': 'Создание рецепта',
+                'page_button': 'Создать рецепт', 
             }
         )   
     recipe = form.save(commit=False)
@@ -78,22 +79,48 @@ def new_recipe(request):
     return redirect('index')
 
 
-# @login_required
-# def new_recipe(request):
-#     form = RecipeForm(request.POST or None, files=request.FILES or None)
-#     if request.method == 'POST':
-#         if form.is_valid():
-#             instance = form.save(commit=False)
-#             instance.author=request.user
-#             instance.save()
-#             return redirect('index')
-#     return render(
-#         request, 
-#         'new.html', 
-#         {
-#             'form': form, 
-#         }
-#     )
+@login_required 
+def recipe_edit(request, recipe_slug):
+    recipe = get_object_or_404(Recipe, slug=recipe_slug)
+    if request.user != recipe.author:
+        return redirect('detail', recipe_slug)
+    form = RecipeForm(
+        request.POST or None, 
+        files=request.FILES or None, 
+        instance=recipe,
+    )
+    ingredients = get_ingredients(request)
+    if request.method == 'POST':
+        if form.is_valid():
+            recipe = Recipe.objects.get(slug=recipe_slug)
+            recipe.name = form.cleaned_data['name']
+            recipe.time = form.cleaned_data['time']
+            recipe.description = form.cleaned_data['description']
+            recipe.image = form.cleaned_data['image']
+            recipe.slug = form.cleaned_data['slug']
+            recipe.save()
+            recipe.tags.set(form.cleaned_data['tags'])
+            RecipeIngredient.objects.filter(recipe=recipe).delete()
+            objects = []
+            for name, quantity in ingredients.items():
+                ingredient = get_object_or_404(Ingredient, name=name)
+                objects.append(RecipeIngredient(
+                    recipe=recipe,
+                    ingredient=ingredient,
+                    quantity=quantity,
+                ))
+            RecipeIngredient.objects.bulk_create(objects)
+            form.save()
+            return redirect('recipe_detail', recipe_slug)        
+    return render(
+        request, 
+        'new.html', 
+        {
+            'form': form,
+            'page_title': 'Изменение рецепта',
+            'page_button': 'Редактировать рецепт', 
+        }
+    )   
 
 
 @login_required
