@@ -33,3 +33,16 @@ def countRestRecipes(total_number, specified_number):
 @register.filter
 def isPurchase(purchase, user):
     return Purchase.objects.filter(user=user, purchase=purchase).exists()     
+
+
+from django.utils.safestring import mark_safe
+@register.simple_tag(takes_context=True)
+def urlReplace(context, **kwargs):
+    query = context['request'].GET.copy()
+    for kwarg in kwargs:
+        try:
+            query.pop(kwarg)
+        except KeyError:
+            pass
+    query.update(kwargs)
+    return mark_safe(query.urlencode())
