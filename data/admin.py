@@ -1,11 +1,11 @@
 from django.contrib import admin
 
 from .models import (
-    Ingredient, 
-    Tag, 
-    Recipe, 
-    RecipeIngredient, 
-    Favorite, 
+    Ingredient,
+    Tag,
+    Recipe,
+    RecipeIngredient,
+    Favorite,
     Subscription,
     Purchase,
 )
@@ -20,7 +20,7 @@ class RecipeIngredientInline(admin.TabularInline):
 
 
 class TagAdmin(admin.ModelAdmin):
-    list_display = ['name', 'color', 'template_id']  
+    list_display = ['name', 'color', 'template_id']
 
 
 class IngredientAdmin(admin.ModelAdmin):
@@ -32,7 +32,7 @@ class IngredientAdmin(admin.ModelAdmin):
 class RecipeAdmin(admin.ModelAdmin):
     inlines = [RecipeIngredientInline]
     list_display = ['name', 'author', 'pub_date']
-    list_filter = ['author', 'name']       
+    list_filter = ['author', 'name']
 
 
 admin.site.register(Tag, TagAdmin)

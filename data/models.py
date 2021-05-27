@@ -25,16 +25,16 @@ class Tag(models.Model):
         verbose_name_plural = 'Теги'
 
     def __str__(self):
-        return self.name    
+        return self.name
 
 
 class Ingredient(models.Model):
     name = models.CharField(
-        max_length=100, 
+        max_length=100,
         verbose_name='Название ингредиента',
     )
     dimension = models.CharField(
-        max_length=50, 
+        max_length=50,
         verbose_name='Единица измерения',
     )
 
@@ -54,10 +54,10 @@ class Recipe(models.Model):
         related_name='recipes',
         verbose_name='Автор',
     )
-    name = models.CharField(max_length=50, verbose_name = 'Название рецепта')
+    name = models.CharField(max_length=50, verbose_name='Название рецепта')
     image = models.ImageField(
-        upload_to='data/', 
-        blank=True, 
+        upload_to='data/',
+        blank=True,
         null=True,
         verbose_name='Изображение',
     )
@@ -95,23 +95,23 @@ class Recipe(models.Model):
 
 class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(
-        Recipe, 
+        Recipe,
         on_delete=models.CASCADE,
         verbose_name='Рецепт',
     )
     ingredient = models.ForeignKey(
-        Ingredient, 
+        Ingredient,
         on_delete=models.CASCADE,
-        verbose_name='Ингредиент',    
+        verbose_name='Ингредиент',
     )
     quantity = models.PositiveIntegerField(verbose_name='Количество')
 
     class Meta:
         verbose_name = 'Ингредиент для рецепта'
-        verbose_name_plural = 'Ингредиенты для рецепта'   
+        verbose_name_plural = 'Ингредиенты для рецепта'
 
     def __str__(self):
-        return f'{self.ingredient} для {self.recipe}'     
+        return f'{self.ingredient} для {self.recipe}'
 
 
 class Favorite(models.Model):
@@ -141,7 +141,7 @@ class Favorite(models.Model):
     def __str__(self):
         return f'Избранный рецепт {self.recipe} у {self.user}'
 
-        
+
 class Subscription(models.Model):
     author = models.ForeignKey(
         User,
@@ -162,10 +162,10 @@ class Subscription(models.Model):
             name='unique_author_user',
         )
         verbose_name = 'Подписка'
-        verbose_name_plural='Подписки'
-    
+        verbose_name_plural = 'Подписки'
+
     def __str__(self):
-        return f'Подписка на {self.author} у {self.user}'           
+        return f'Подписка на {self.author} у {self.user}'
 
 
 class Purchase(models.Model):

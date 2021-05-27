@@ -5,7 +5,7 @@ from data.models import Favorite, Subscription, Purchase
 register = template.Library()
 
 
-@register.filter 
+@register.filter
 def addClass(field, classname):
     return field.as_widget(attrs={"class": classname})
 
@@ -22,7 +22,7 @@ def isFavorite(recipe, user):
 
 @register.filter
 def isSubscription(author, user):
-    return Subscription.objects.filter(author=author, user=user).exists()    
+    return Subscription.objects.filter(author=author, user=user).exists()
 
 
 @register.filter
@@ -32,17 +32,4 @@ def countRestRecipes(total_number, specified_number):
 
 @register.filter
 def isPurchase(purchase, user):
-    return Purchase.objects.filter(user=user, purchase=purchase).exists()     
-
-
-from django.utils.safestring import mark_safe
-@register.simple_tag(takes_context=True)
-def urlReplace(context, **kwargs):
-    query = context['request'].GET.copy()
-    for kwarg in kwargs:
-        try:
-            query.pop(kwarg)
-        except KeyError:
-            pass
-    query.update(kwargs)
-    return mark_safe(query.urlencode())
+    return Purchase.objects.filter(user=user, purchase=purchase).exists()

@@ -5,11 +5,11 @@ from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 
 from .models import (
-    User, 
-    Tag, 
-    Ingredient, 
-    Recipe, 
-    RecipeIngredient, 
+    User,
+    Tag,
+    Ingredient,
+    Recipe,
+    RecipeIngredient,
     Subscription,
 )
 from .forms import RecipeForm
@@ -17,9 +17,9 @@ from .forms import RecipeForm
 
 def page_not_found(request, exception):
     return render(
-        request, 
-        "misc/404.html", 
-        {"path": request.path}, 
+        request,
+        "misc/404.html",
+        {"path": request.path},
         status=404,
     )
 
@@ -29,20 +29,20 @@ def server_error(request):
 
 
 def index(request):
+    tags = []
+    tags.append(request.GET.get('tag'))
     recipes = Recipe.objects.all()
-    tags = Tag.objects.all()
-    paginator = Paginator(recipes, 5) 
-    page_number = request.GET.get('page') 
+    paginator = Paginator(recipes, 5)
+    page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(
         request,
         'index.html',
         {
-            'tags': tags,
             'page': page,
-            'paginator': paginator,           
+            'paginator': paginator,
         }
-    ) 
+    )
 
 
 def get_ingredients(request):
@@ -52,24 +52,24 @@ def get_ingredients(request):
             value_ingredient = key[15:]
             ingredients[request.POST[key]] = request.POST[
                 'valueIngredient_' + value_ingredient
-            ]    
+            ]
     return ingredients
 
 
-@login_required    
+@login_required
 def new_recipe(request):
     form = RecipeForm(request.POST or None, files=request.FILES or None)
     ingredients = get_ingredients(request)
     if not form.is_valid():
         return render(
-            request, 
-            'new.html', 
+            request,
+            'new.html',
             {
                 'form': form,
                 'page_title': 'Создание рецепта',
-                'page_button': 'Создать рецепт', 
+                'page_button': 'Создать рецепт',
             }
-        )   
+        )
     recipe = form.save(commit=False)
     recipe.author = request.user
     recipe.save()
@@ -87,14 +87,14 @@ def new_recipe(request):
     return redirect('index')
 
 
-@login_required 
+@login_required
 def recipe_edit(request, recipe_slug):
     recipe = get_object_or_404(Recipe, slug=recipe_slug)
     if request.user != recipe.author:
         return redirect('detail', recipe_slug)
     form = RecipeForm(
-        request.POST or None, 
-        files=request.FILES or None, 
+        request.POST or None,
+        files=request.FILES or None,
         instance=recipe,
     )
     ingredients = get_ingredients(request)
@@ -119,23 +119,23 @@ def recipe_edit(request, recipe_slug):
                 ))
             RecipeIngredient.objects.bulk_create(objects)
             form.save()
-            return redirect('recipe_detail', recipe_slug)        
+            return redirect('recipe_detail', recipe_slug)
     return render(
-        request, 
-        'new.html', 
+        request,
+        'new.html',
         {
             'form': form,
             'page_title': 'Изменение рецепта',
-            'page_button': 'Редактировать рецепт', 
+            'page_button': 'Редактировать рецепт',
         }
-    )   
+    )
 
 
 def recipe_detail(request, recipe_slug):
     recipe = get_object_or_404(Recipe, slug=recipe_slug)
     recipe_ingredients = RecipeIngredient.objects.filter(recipe=recipe)
     return render(
-        request, 
+        request,
         'detail.html',
         {
             'recipe': recipe,
@@ -145,15 +145,15 @@ def recipe_detail(request, recipe_slug):
 
 
 def profile(request, username):
-    author = get_object_or_404(User, username=username)  
+    author = get_object_or_404(User, username=username)
     recipes = Recipe.objects.filter(author=author)
     tags = Tag.objects.all()
     paginator = Paginator(recipes, 10)
     page_number = request.GET.get('page')
-    page = paginator.get_page(page_number)    
+    page = paginator.get_page(page_number)
     return render(
-        request, 
-        'profile.html', 
+        request,
+        'profile.html',
         {
             'author': author,
             'tags': tags,
@@ -171,8 +171,8 @@ def favorites(request):
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(
-        request, 
-        'favorites.html', 
+        request,
+        'favorites.html',
         {
             'favorites': favorites,
             'tags': tags,
@@ -191,8 +191,8 @@ def subscriptions(request):
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(
-        request, 
-        'subscriptions.html', 
+        request,
+        'subscriptions.html',
         {
             'subscriptions': subscriptions,
             'page': page,
@@ -205,12 +205,12 @@ def subscriptions(request):
 def purchases(request):
     purchases = Recipe.objects.filter(purchases__user=request.user)
     return render(
-        request, 
-        'purchases.html', 
+        request,
+        'purchases.html',
         {
             'purchases': purchases,
         }
-    )    
+    )
 
 
 @login_required
@@ -225,19 +225,19 @@ def download_ingredients(request):
         key = (
             f'{ingredient.ingredient.name} '
             f'({ingredient.ingredient.dimension})'
-        )    
+        )
         value = ingredient.quantity
         if key in dict_:
             dict_[key] += value
         else:
-            dict_[key] = value 
+            dict_[key] = value
 
     ingredients_list = ''
     for key, value in dict_.items():
         ingredients_list += f'{key} - {value}'
         ingredients_list += '\r\n'
     response = HttpResponse(
-        ingredients_list, 
+        ingredients_list,
         content_type='application/text charset=utf-8',
     )
     response['Content-Disposition'] = (
@@ -256,15 +256,15 @@ class AboutAuthorView(TemplateView):
         context['image'] = 'author.jpg'
         context['author'] = {
             'name': 'Денис Докторов',
-            'github_url' : 'https://github.com/docker581/'
+            'github_url': 'https://github.com/docker581/',
         }
-        context['list_name'] = 'Интересы'  
+        context['list_name'] = 'Интересы'
         context['list'] = [
             'Darkwave / synthpop',
             'Game theory',
             'Travels',
         ]
-        return context 
+        return context
 
 
 class AboutTechView(TemplateView):

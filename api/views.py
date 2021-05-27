@@ -1,11 +1,11 @@
 from rest_framework import mixins, viewsets, views, status, response
 
 from data.models import (
-    User, 
-    Ingredient, 
-    Recipe, 
-    Favorite, 
-    Subscription, 
+    User,
+    Ingredient,
+    Recipe,
+    Favorite,
+    Subscription,
     Purchase,
 )
 from .serializers import IngredientSerializer
@@ -44,7 +44,7 @@ class AddSubscriptionAPIView(views.APIView):
         author = User.objects.get(id=request.data['id'])
         if author != request.user:
             Subscription.objects.get_or_create(
-                author = author,
+                author=author,
                 user=request.user,
             )
         return response.Response({'success': True}, status=status.HTTP_200_OK)
@@ -54,15 +54,15 @@ class RemoveSubscriptionAPIView(views.APIView):
     def delete(self, request, id, format=None):
         author = User.objects.get(id=id)
         Subscription.objects.filter(author=author, user=request.user).delete()
-        return response.Response({'success': True}, status=status.HTTP_200_OK) 
+        return response.Response({'success': True}, status=status.HTTP_200_OK)
 
 
 class PurchaseAPIView(views.APIView):
     def get(self, request, format=None):
         purchases = Purchase.objects.all()
         return response.Response(
-            {'success': True}, 
-            data=purchases, 
+            {'success': True},
+            data=purchases,
             status=status.HTTP_200_OK,
         )
 

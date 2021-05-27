@@ -1,4 +1,4 @@
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
 from data.models import Ingredient
 from foodgram_project.settings import BASE_DIR
@@ -18,6 +18,6 @@ class Command(BaseCommand):
             for row in reader:
                 name, dimension = row
                 Ingredient.objects.get_or_create(
-                    name=name, 
+                    name=name,
                     dimension=dimension,
                 )

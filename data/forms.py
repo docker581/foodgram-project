@@ -8,13 +8,13 @@ class RecipeForm(forms.ModelForm):
         model = Recipe
         fields = (
             'name',
-            'tags', 
-            'time', 
-            'description', 
+            'tags',
+            'time',
+            'description',
             'image',
             'slug',
         )
         widgets = {
-            'description': forms.Textarea(attrs={'rows':8}),
-            'tags': forms.CheckboxSelectMultiple()
+            'description': forms.Textarea(attrs={'rows': 8}),
+            'tags': forms.CheckboxSelectMultiple(),
         }
