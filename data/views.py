@@ -29,9 +29,13 @@ def server_error(request):
 
 
 def index(request):
-    tags = []
-    tags.append(request.GET.get('tag'))
-    recipes = Recipe.objects.all()
+    common_tags = Tag.objects.all()
+    get_tags = request.GET.getlist('tags')
+    if get_tags:
+        active_tags = Tag.objects.filter(slug__in=get_tags)
+    else:
+        active_tags = Tag.objects.all()          
+    recipes = Recipe.objects.filter(tags__in=active_tags).distinct()
     paginator = Paginator(recipes, 5)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -39,6 +43,8 @@ def index(request):
         request,
         'index.html',
         {
+            'common_tags': common_tags,
+            'active_tags': active_tags,
             'page': page,
             'paginator': paginator,
         }
@@ -145,9 +151,16 @@ def recipe_detail(request, recipe_slug):
 
 
 def profile(request, username):
+    common_tags = Tag.objects.all()
+    get_tags = request.GET.getlist('tags')
+    if get_tags:
+        active_tags = Tag.objects.filter(slug__in=get_tags)
+    else:
+        active_tags = Tag.objects.all()
     author = get_object_or_404(User, username=username)
-    recipes = Recipe.objects.filter(author=author)
-    tags = Tag.objects.all()
+    recipes = Recipe.objects.filter(author=author).filter(
+        tags__in=active_tags,
+    ).distinct()
     paginator = Paginator(recipes, 10)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -155,8 +168,9 @@ def profile(request, username):
         request,
         'profile.html',
         {
+            'common_tags': common_tags,
+            'active_tags': active_tags,
             'author': author,
-            'tags': tags,
             'page': page,
             'paginator': paginator,
         }
@@ -165,8 +179,15 @@ def profile(request, username):
 
 @login_required
 def favorites(request):
-    favorites = Recipe.objects.filter(favorites__user=request.user)
-    tags = Tag.objects.all()
+    common_tags = Tag.objects.all()
+    get_tags = request.GET.getlist('tags')
+    if get_tags:
+        active_tags = Tag.objects.filter(slug__in=get_tags)
+    else:
+        active_tags = Tag.objects.all()
+    favorites = Recipe.objects.filter(
+        favorites__user=request.user,
+    ).filter(tags__in=active_tags).distinct()
     paginator = Paginator(favorites, 5)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -174,8 +195,9 @@ def favorites(request):
         request,
         'favorites.html',
         {
+            'common_tags': common_tags,
+            'active_tags': active_tags,
             'favorites': favorites,
-            'tags': tags,
             'page': page,
             'paginator': paginator,
         }
@@ -231,7 +253,6 @@ def download_ingredients(request):
             dict_[key] += value
         else:
             dict_[key] = value
-
     ingredients_list = ''
     for key, value in dict_.items():
         ingredients_list += f'{key} - {value}'

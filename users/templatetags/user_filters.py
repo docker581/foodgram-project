@@ -26,10 +26,23 @@ def isSubscription(author, user):
 
 
 @register.filter
+def isPurchase(purchase, user):
+    return Purchase.objects.filter(user=user, purchase=purchase).exists()
+
+
+@register.filter
 def countRestRecipes(total_number, specified_number):
     return total_number - specified_number
 
 
 @register.filter
-def isPurchase(purchase, user):
-    return Purchase.objects.filter(user=user, purchase=purchase).exists()
+def tagLink(request, tag):
+    request_copy = request.GET.copy()
+    request_copy["page"] = "1"
+    tags = request_copy.getlist("tags")
+    if tag.slug in tags:
+        tags.remove(tag.slug)
+        request_copy.setlist("tags", tags)
+    else:
+        request_copy.appendlist("tags", tag.slug)
+    return request_copy.urlencode()    

@@ -14,9 +14,9 @@ class Tag(models.Model):
         max_length=50,
         verbose_name='Цвет тега',
     )
-    template_id = models.CharField(
+    slug = models.CharField(
         max_length=50,
-        verbose_name='Название для атрибута id в шаблоне',
+        verbose_name='URL-имя',
     )
 
     class Meta:
