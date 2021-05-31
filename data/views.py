@@ -34,7 +34,7 @@ def index(request):
     if get_tags:
         active_tags = Tag.objects.filter(slug__in=get_tags)
     else:
-        active_tags = Tag.objects.all()          
+        active_tags = Tag.objects.all()
     recipes = Recipe.objects.filter(tags__in=active_tags).distinct()
     paginator = Paginator(recipes, 5)
     page_number = request.GET.get('page')

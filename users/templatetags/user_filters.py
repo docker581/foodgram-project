@@ -45,4 +45,4 @@ def tagLink(request, tag):
         request_copy.setlist("tags", tags)
     else:
         request_copy.appendlist("tags", tag.slug)
-    return request_copy.urlencode()    
+    return request_copy.urlencode()
