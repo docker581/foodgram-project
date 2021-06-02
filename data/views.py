@@ -14,6 +14,8 @@ from .models import (
 )
 from .forms import RecipeForm
 
+RECIPE_QUANTITY = 5
+
 
 def page_not_found(request, exception):
     return render(
@@ -28,27 +30,50 @@ def server_error(request):
     return render(request, "misc/500.html", status=500)
 
 
-def index(request):
+def get_tags(request):
     common_tags = Tag.objects.all()
     get_tags = request.GET.getlist('tags')
     if get_tags:
         active_tags = Tag.objects.filter(slug__in=get_tags)
     else:
         active_tags = Tag.objects.all()
+    return common_tags, active_tags
+
+
+def common_view(request, template, page, paginator, tags=None):
+    if tags:
+        return render(
+            request,
+            template,
+            {
+                'common_tags': tags['common_tags'],
+                'active_tags': tags['active_tags'],
+                'page': page,
+                'paginator': paginator,
+            }
+        )
+    else:
+        return render(
+            request,
+            template,
+            {
+                'page': page,
+                'paginator': paginator,
+            }
+        )
+
+
+def index(request):
+    common_tags, active_tags = get_tags(request)
     recipes = Recipe.objects.filter(tags__in=active_tags).distinct()
-    paginator = Paginator(recipes, 5)
+    paginator = Paginator(recipes, RECIPE_QUANTITY)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    return render(
-        request,
-        'index.html',
-        {
-            'common_tags': common_tags,
-            'active_tags': active_tags,
-            'page': page,
-            'paginator': paginator,
-        }
-    )
+    tags = {
+        'common_tags': common_tags,
+        'active_tags': active_tags,
+    }
+    return common_view(request, 'index.html', page, paginator, tags)
 
 
 def get_ingredients(request):
@@ -80,15 +105,15 @@ def new_recipe(request):
     recipe.author = request.user
     recipe.save()
     RecipeIngredient.objects.filter(recipe=recipe).delete()
-    objects = []
+    objects_ = []
     for name, quantity in ingredients.items():
         ingredient = get_object_or_404(Ingredient, name=name)
-        objects.append(RecipeIngredient(
+        objects_.append(RecipeIngredient(
             recipe=recipe,
             ingredient=ingredient,
             quantity=quantity,
         ))
-    RecipeIngredient.objects.bulk_create(objects)
+    RecipeIngredient.objects.bulk_create(objects_)
     form.save_m2m()
     return redirect('index')
 
@@ -107,23 +132,16 @@ def recipe_edit(request, recipe_slug):
     if request.method == 'POST':
         if form.is_valid():
             recipe = Recipe.objects.get(slug=recipe_slug)
-            recipe.name = form.cleaned_data['name']
-            recipe.time = form.cleaned_data['time']
-            recipe.description = form.cleaned_data['description']
-            recipe.image = form.cleaned_data['image']
-            recipe.slug = form.cleaned_data['slug']
-            recipe.save()
-            recipe.tags.set(form.cleaned_data['tags'])
             RecipeIngredient.objects.filter(recipe=recipe).delete()
-            objects = []
+            objects_ = []
             for name, quantity in ingredients.items():
                 ingredient = get_object_or_404(Ingredient, name=name)
-                objects.append(RecipeIngredient(
+                objects_.append(RecipeIngredient(
                     recipe=recipe,
                     ingredient=ingredient,
                     quantity=quantity,
                 ))
-            RecipeIngredient.objects.bulk_create(objects)
+            RecipeIngredient.objects.bulk_create(objects_)
             form.save()
             return redirect('recipe_detail', recipe_slug)
     return render(
@@ -151,17 +169,12 @@ def recipe_detail(request, recipe_slug):
 
 
 def profile(request, username):
-    common_tags = Tag.objects.all()
-    get_tags = request.GET.getlist('tags')
-    if get_tags:
-        active_tags = Tag.objects.filter(slug__in=get_tags)
-    else:
-        active_tags = Tag.objects.all()
+    common_tags, active_tags = get_tags(request)
     author = get_object_or_404(User, username=username)
     recipes = Recipe.objects.filter(author=author).filter(
         tags__in=active_tags,
     ).distinct()
-    paginator = Paginator(recipes, 10)
+    paginator = Paginator(recipes, RECIPE_QUANTITY)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(
@@ -179,29 +192,18 @@ def profile(request, username):
 
 @login_required
 def favorites(request):
-    common_tags = Tag.objects.all()
-    get_tags = request.GET.getlist('tags')
-    if get_tags:
-        active_tags = Tag.objects.filter(slug__in=get_tags)
-    else:
-        active_tags = Tag.objects.all()
+    common_tags, active_tags = get_tags(request)
     favorites = Recipe.objects.filter(
         favorites__user=request.user,
     ).filter(tags__in=active_tags).distinct()
-    paginator = Paginator(favorites, 5)
+    paginator = Paginator(favorites, RECIPE_QUANTITY)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    return render(
-        request,
-        'favorites.html',
-        {
-            'common_tags': common_tags,
-            'active_tags': active_tags,
-            'favorites': favorites,
-            'page': page,
-            'paginator': paginator,
-        }
-    )
+    tags = {
+        'common_tags': common_tags,
+        'active_tags': active_tags,
+    }
+    return common_view(request, 'favorites.html', page, paginator, tags)
 
 
 @login_required
@@ -212,15 +214,7 @@ def subscriptions(request):
     paginator = Paginator(subscriptions, 3)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
-    return render(
-        request,
-        'subscriptions.html',
-        {
-            'subscriptions': subscriptions,
-            'page': page,
-            'paginator': paginator,
-        }
-    )
+    return common_view(request, 'subscriptions.html', page, paginator)
 
 
 @login_required
@@ -254,8 +248,8 @@ def download_ingredients(request):
         else:
             dict_[key] = value
     ingredients_list = ''
-    for key, value in dict_.items():
-        ingredients_list += f'{key} - {value}'
+    for name, quantity in dict_.items():
+        ingredients_list += f'{name} - {quantity}'
         ingredients_list += '\r\n'
     response = HttpResponse(
         ingredients_list,

@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models.constraints import UniqueConstraint
+from django.core.validators import MinValueValidator
 
 User = get_user_model()
 
@@ -16,6 +17,7 @@ class Tag(models.Model):
     )
     slug = models.CharField(
         max_length=50,
+        unique=True,
         verbose_name='URL-имя',
     )
 
@@ -72,7 +74,10 @@ class Recipe(models.Model):
         related_name='tags',
         verbose_name='Теги',
     )
-    time = models.PositiveIntegerField(verbose_name='Время приготовления')
+    time = models.PositiveIntegerField(
+        validators=[MinValueValidator(1)],
+        verbose_name='Время приготовления',
+    )
     slug = models.SlugField(
         max_length=50,
         unique=True,
@@ -104,7 +109,10 @@ class RecipeIngredient(models.Model):
         on_delete=models.CASCADE,
         verbose_name='Ингредиент',
     )
-    quantity = models.PositiveIntegerField(verbose_name='Количество')
+    quantity = models.PositiveIntegerField(
+        validators=[MinValueValidator(1)],
+        verbose_name='Количество',
+    )
 
     class Meta:
         verbose_name = 'Ингредиент для рецепта'

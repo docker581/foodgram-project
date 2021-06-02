@@ -1,3 +1,5 @@
+from django.http import JsonResponse
+
 from rest_framework import mixins, viewsets, views, status, response
 
 from data.models import (
@@ -9,6 +11,9 @@ from data.models import (
     Purchase,
 )
 from .serializers import IngredientSerializer
+
+SUCCESS = JsonResponse({'success': True})
+FAILURE = JsonResponse({'success': False})
 
 
 class IngredientViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -25,36 +30,41 @@ class IngredientViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 class AddFavoriteAPIView(views.APIView):
     def post(self, request, format=None):
         recipe = Recipe.objects.get(id=request.data['id'])
-        Favorite.objects.get_or_create(
-            user=request.user,
-            recipe=recipe,
-        )
-        return response.Response({'success': True}, status=status.HTTP_200_OK)
+        if Favorite.objects.create(user=request.user, recipe=recipe):
+            return SUCCESS
+        else:
+            return FAILURE
 
 
 class RemoveFavoriteAPIView(views.APIView):
     def delete(self, request, id, format=None):
         recipe = Recipe.objects.get(id=id)
-        Favorite.objects.filter(recipe=recipe, user=request.user).delete()
-        return response.Response({'success': True}, status=status.HTTP_200_OK)
+        if Favorite.objects.filter(recipe=recipe, user=request.user).delete():
+            return SUCCESS
+        else:
+            return FAILURE
 
 
 class AddSubscriptionAPIView(views.APIView):
     def post(self, request, format=None):
         author = User.objects.get(id=request.data['id'])
         if author != request.user:
-            Subscription.objects.get_or_create(
-                author=author,
-                user=request.user,
-            )
-        return response.Response({'success': True}, status=status.HTTP_200_OK)
+            if Subscription.objects.create(author=author, user=request.user):
+                return SUCCESS
+            else:
+                return FAILURE
+        return FAILURE
 
 
 class RemoveSubscriptionAPIView(views.APIView):
     def delete(self, request, id, format=None):
         author = User.objects.get(id=id)
-        Subscription.objects.filter(author=author, user=request.user).delete()
-        return response.Response({'success': True}, status=status.HTTP_200_OK)
+        if Subscription.objects.filter(
+            author=author, user=request.user,
+        ).delete():
+            return SUCCESS
+        else:
+            return FAILURE
 
 
 class PurchaseAPIView(views.APIView):
@@ -68,15 +78,18 @@ class PurchaseAPIView(views.APIView):
 
     def post(self, request, format=None):
         purchase = Recipe.objects.get(id=request.data['id'])
-        Purchase.objects.get_or_create(
-            user=request.user,
-            purchase=purchase,
-        )
-        return response.Response({'success': True}, status=status.HTTP_200_OK)
+        if Purchase.objects.create(user=request.user, purchase=purchase):
+            return SUCCESS
+        else:
+            return FAILURE
 
 
 class RemovePurchaseAPIView(views.APIView):
     def delete(self, request, id, format=None):
         purchase = Recipe.objects.get(id=id)
-        Purchase.objects.filter(purchase=purchase, user=request.user).delete()
-        return response.Response({'success': True}, status=status.HTTP_200_OK)
+        if Purchase.objects.filter(
+            purchase=purchase, user=request.user,
+        ).delete():
+            return SUCCESS
+        else:
+            return FAILURE
