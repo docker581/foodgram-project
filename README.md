@@ -46,6 +46,9 @@ docker-compose exec web python manage.py collectstatic --no-input
 - В админке (localhost/admin/)
 - С помощью готового набора данных
 ```bash
+docker-compose exec web python manage.py makemigrations
+```
+```bash
 docker-compose exec web python manage.py load_ingredients
 ```
 
