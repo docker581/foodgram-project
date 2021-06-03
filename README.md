@@ -1,7 +1,7 @@
 # foodgram-project
 
 ## Описание проекта
-Дипломный проект 
+Дипломный проект - Продуктовый помощник
 
 ## Статус
 На сдаче 1 части
@@ -37,11 +37,11 @@ docker-compose exec web python manage.py migrate --noinput
 docker-compose exec web python manage.py createsuperuser
 ```
 
-### Заполнение базы начальными данными
+### Заполнение базы ингредиентов
 - В админке (localhost/admin/)
 - С помощью готового набора данных
 ```bash
-docker-compose exec web python manage.py loaddata fixtures.json
+docker-compose exec web python manage.py load_ingredients
 ```
 
 ## Автор
