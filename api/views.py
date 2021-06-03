@@ -13,7 +13,7 @@ from data.models import (
 from .serializers import IngredientSerializer
 
 SUCCESS = JsonResponse({'success': True})
-FAILURE = JsonResponse({'success': False})
+FAILURE = JsonResponse({'success': False}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class IngredientViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -25,6 +25,11 @@ class IngredientViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         if ingredient is not None:
             queryset = queryset.filter(name__startswith=ingredient)
         return queryset
+
+
+class AddEssenceAPIView(views.APIView):
+    def post(self, request, format=None):
+        pass
 
 
 class AddFavoriteAPIView(views.APIView):
