@@ -27,12 +27,7 @@ class IngredientViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         return queryset
 
 
-class AddEssenceAPIView(views.APIView):
-    def post(self, request, format=None):
-        pass
-
-
-class AddFavoriteAPIView(views.APIView):
+class FavoriteAPIView(views.APIView):
     def post(self, request, format=None):
         recipe = Recipe.objects.get(id=request.data['id'])
         if Favorite.objects.create(user=request.user, recipe=recipe):
@@ -40,8 +35,6 @@ class AddFavoriteAPIView(views.APIView):
         else:
             return FAILURE
 
-
-class RemoveFavoriteAPIView(views.APIView):
     def delete(self, request, id, format=None):
         recipe = Recipe.objects.get(id=id)
         if Favorite.objects.filter(recipe=recipe, user=request.user).delete():
@@ -50,7 +43,7 @@ class RemoveFavoriteAPIView(views.APIView):
             return FAILURE
 
 
-class AddSubscriptionAPIView(views.APIView):
+class SubscriptionAPIView(views.APIView):
     def post(self, request, format=None):
         author = User.objects.get(id=request.data['id'])
         if author != request.user:
@@ -60,8 +53,6 @@ class AddSubscriptionAPIView(views.APIView):
                 return FAILURE
         return FAILURE
 
-
-class RemoveSubscriptionAPIView(views.APIView):
     def delete(self, request, id, format=None):
         author = User.objects.get(id=id)
         if Subscription.objects.filter(
@@ -88,8 +79,6 @@ class PurchaseAPIView(views.APIView):
         else:
             return FAILURE
 
-
-class RemovePurchaseAPIView(views.APIView):
     def delete(self, request, id, format=None):
         purchase = Recipe.objects.get(id=id)
         if Purchase.objects.filter(
