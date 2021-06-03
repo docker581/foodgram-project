@@ -37,6 +37,11 @@ docker-compose exec web python manage.py migrate --noinput
 docker-compose exec web python manage.py createsuperuser
 ```
 
+### Подключение статики
+```bash
+docker-compose exec web python manage.py collectstatic --no-input
+```
+
 ### Заполнение базы ингредиентов
 - В админке (localhost/admin/)
 - С помощью готового набора данных
