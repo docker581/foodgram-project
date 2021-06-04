@@ -31,6 +31,9 @@ docker-compose up -d
 
 ### Создание суперпользователя
 ```bash
+docker-compose exec web python manage.py makemigrations
+```
+```bash
 docker-compose exec web python manage.py migrate --noinput
 ```
 ```bash
@@ -45,9 +48,6 @@ docker-compose exec web python manage.py collectstatic --no-input
 ### Заполнение базы ингредиентов
 - В админке (localhost/admin/)
 - С помощью готового набора данных
-```bash
-docker-compose exec web python manage.py makemigrations
-```
 ```bash
 docker-compose exec web python manage.py load_ingredients
 ```
