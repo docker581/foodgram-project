@@ -1,9 +1,9 @@
 # foodgram-project
 
-## Описание проекта
+## Описание
 Продуктовый помощник (дипломный проект)
 
-## Статус
+## Статус проекта
 ![status](https://github.com/docker581/foodgram-project/actions/workflows/main.yml/badge.svg)
 
 ## Ссылка на развернутый сервер
