@@ -6,7 +6,7 @@ import sys
 
 def main():
     os.environ.setdefault(
-        'DJANGO_SETTINGS_MODULE', 
+        'DJANGO_SETTINGS_MODULE',
         'foodgram_project.settings',
     )
     try:
