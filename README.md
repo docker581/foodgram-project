@@ -24,6 +24,16 @@ https://docs.docker.com/engine/install/
 git clone https://github.com/docker581/foodgram-project
 ```
 
+### Пример файла .env
+```bash
+DB_ENGINE=django.db.backends.postgresql 
+DB_NAME=postgres 
+POSTGRES_USER=postgres 
+POSTGRES_PASSWORD=postgres
+DB_HOST=db 
+DB_PORT=5432
+```
+
 ### Запуск приложения
 ```bash
 docker-compose up -d
@@ -32,11 +42,7 @@ docker-compose up -d
 ### Создание суперпользователя
 ```bash
 docker-compose exec web python manage.py makemigrations
-```
-```bash
 docker-compose exec web python manage.py migrate --noinput
-```
-```bash
 docker-compose exec web python manage.py createsuperuser
 ```
 
