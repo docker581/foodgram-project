@@ -3,12 +3,6 @@
 ## Описание
 Продуктовый помощник (дипломный проект)
 
-## Статус проекта
-![status](https://github.com/docker581/foodgram-project/actions/workflows/main.yml/badge.svg)
-
-## Ссылка на развернутый сервер
-http://84.252.141.31
-
 ## Стек технологий
 - Python 3.8.5
 - Django 3.0.5
